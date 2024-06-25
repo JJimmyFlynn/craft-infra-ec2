@@ -1,0 +1,11 @@
+---
+- name: add viget group
+  group:
+    name: viget
+    state: present
+
+- name: add viget user
+  user:
+    name: viget
+    group: viget
+    shell: /bin/bash

@@ -1,0 +1,14 @@
+---
+- name: "PHP Webserver Setup"
+  become: true
+  hosts: default
+  vars_files: vars.yml
+
+  pre_tasks:
+    - name: "Update apt cache"
+      apt: update_cache=yes cache_valid_time=3600
+
+  roles:
+    - role: "../roles/ec2-base"
+    - role: "../roles/php"
+    - role: "../roles/nginx"

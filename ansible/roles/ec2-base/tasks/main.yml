@@ -1,0 +1,7 @@
+---
+- include_tasks: add-users.yml
+- include_tasks: ssh.yml
+- include_tasks: utilities.yml
+- include_tasks: fail2ban.yml
+- include_tasks: ntp.yml
+- include_tasks: unattended-upgrades.yml

@@ -1,0 +1,9 @@
+---
+- name: copy ssh configs
+  template:
+    src: "ssh/{{ item }}.j2"
+    dest: "/etc/ssh/ssh_config.d/{{ item }}"
+  with_items:
+    - "disable-password-auth.conf"
+    - "disable-root-login.conf"
+  notify: restart ssh

@@ -1,0 +1,21 @@
+---
+- name: copy vhosts files into place
+  template:
+    src: "vhost.j2"
+    dest: "/etc/nginx/sites-enabled/{{item.server_name}}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: item.state|default('present') != 'absent'
+  with_items: "{{ vhosts }}"
+  notify: restart nginx
+
+- name: ensure site directory exists for each vhost
+  file:
+    path: "/var/www/{{ item.server_name }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0755
+  with_items: "{{ vhosts }}"
+  notify: restart nginx

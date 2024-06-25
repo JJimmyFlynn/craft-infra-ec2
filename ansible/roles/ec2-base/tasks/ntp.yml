@@ -1,0 +1,16 @@
+---
+- name: install chrony
+  yum:
+    name: chrony
+
+- name: add aws time sync config
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    line: "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4"
+    insertbefore: "BOF"
+    create: true
+  notify: restart chrony
+
+- name: set timezone
+  timezone:
+    name: "{{ base_timezone | default('America/New_York') }}"

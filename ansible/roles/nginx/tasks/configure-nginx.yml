@@ -1,0 +1,26 @@
+---
+- name: copy nginx config files
+  template:
+    src: "{{ item.src }}.j2"
+    dest: "{{ item.dest }}/{{ item.src }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - src: "nginx.conf"
+      dest: "/etc/nginx/"
+    - src: "general.conf"
+      dest: "/etc/nginx/snippets"
+    - src: "security.conf"
+      dest: "/etc/nginx/snippets"
+    - src: "php_fastcgi.conf"
+      dest: "/etc/nginx/snippets"
+    - src: "wordpress.conf"
+      dest: "/etc/nginx/snippets"
+
+- name: remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: remove_default_vhost | default('False') | bool
+  notify: restart nginx

@@ -1,0 +1,14 @@
+# Base PHP Settings
+memory_limit={{ php_memory_limit }}
+max_execution_time={{ php_max_execution_time }}
+upload_max_filesize = {{ php_max_filesize }}
+post_max_size = {{ php_post_max_size }}
+max_input_vars = {{ php_max_input_vars }}
+
+# Gzip Settings
+zlib.output_compression = On
+zlib.output_compression_level = 5
+
+# Opcache Settings
+zend_extension=opcache
+opcache.enable={{ php_opcache_enabled }}

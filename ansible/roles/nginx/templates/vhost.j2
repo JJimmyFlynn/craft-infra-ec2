@@ -1,0 +1,65 @@
+server {
+    listen                  {{ item.listen_port | default('80') }} http2;
+{% if item.listen_on_ipv6 is defined %}
+    listen                  [::]:{{ item.listen_port | default('80') }} http2;
+{% endif %}
+    server_name             {{ item.server_name  }};
+    set                     $base {{ item.base }};
+    root                    $base/{{ item.root | default('') }};
+
+    # security
+    include                 snippets/security.conf;
+
+    # general conf
+    include snippets/general.conf;
+
+{% if item.include_wordpress_conf is defined and item.include_wordpress_conf %}
+    # wordpress
+    include                 snippets/wordpress.conf;
+{% endif %}
+
+    # logging
+    error_log               /var/log/nginx/error.log error;
+
+{% if item.index is defined %}
+    index                   {{ item.index }};
+{% endif %}
+
+{% if item.template_type is defined and item.template_type == 'php' %}
+    # index.php fallback
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # handle .php
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php-fpm.sock;
+        include      snippets/php_fastcgi.conf;
+    }
+{% endif %}
+}
+
+{% if item.redirect_http is defined and item.redirect_http %}
+# HTTP redirects
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ item.server_name }};
+
+    location / {
+        return 301 https://{{ item.server_name.split(' ')[0] }}$request_uri;
+    }
+}
+
+{% if item.listen_on_ipv6 is defined and item.listen_on_ipv6 %}
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ item.server_name }};
+
+    location / {
+        return 301 https://{{ item.server_name.split(' ')[0] }}$request_uri;
+    }
+}
+{% endif %}
+{% endif %}

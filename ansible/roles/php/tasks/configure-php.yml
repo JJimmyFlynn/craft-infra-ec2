@@ -1,0 +1,12 @@
+---
+- name: copy PHP-fpm ini file
+  template:
+    src: templates/php-fpm.ini.j2
+    dest: "/etc/php/{{ php_version }}/fpm/conf.d/99-overrides.ini"
+  notify: restart php
+
+- name: copy PHP CLI ini file
+  template:
+    src: templates/php-cli.ini.j2
+    dest: "/etc/php/{{ php_version }}/cli/conf.d/99-overrides.ini"
+  notify: restart php

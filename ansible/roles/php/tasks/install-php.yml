@@ -1,0 +1,30 @@
+---
+- name: add utilities for apt repository management
+  apt:
+    name:
+      - python3-apt
+      - python3-pycurl
+
+- name: add ondrej PHP repository
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: install PHP
+  vars:
+    base_php_extensions:
+      - "php{{ php_version }}-fpm"
+      - "php{{ php_version }}-common"
+      - "php{{ php_version }}-cli"
+      - "php{{ php_version }}-mysql"
+      - "php{{ php_version }}-mbstring"
+      - "php{{ php_version }}-xml"
+      - "php{{ php_version }}-curl"
+      - "php{{ php_version }}-imagick"
+      - "php{{ php_version }}-redis"
+      - "php{{ php_version }}-bcmath"
+      - "php{{ php_version }}-intl"
+      - "php{{ php_version }}-zip"
+  apt:
+    name: "{{ base_php_extensions + extra_php_extensions }}"
+

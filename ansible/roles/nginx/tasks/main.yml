@@ -1,0 +1,4 @@
+---
+- include_tasks: install-nginx.yml
+- include_tasks: configure-nginx.yml
+- include_tasks: vhosts.yml
