@@ -16,7 +16,7 @@ resource "aws_launch_template" "web" {
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
   iam_instance_profile {
-    name = "EC2_SSM"
+    name = aws_iam_role.ec2_instance_role.name
   }
 
   monitoring {

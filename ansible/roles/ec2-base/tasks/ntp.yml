@@ -1,6 +1,6 @@
 ---
 - name: install chrony
-  yum:
+  apt:
     name: chrony
 
 - name: add aws time sync config

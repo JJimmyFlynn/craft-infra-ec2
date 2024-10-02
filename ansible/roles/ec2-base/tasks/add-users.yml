@@ -1,11 +1,11 @@
 ---
-- name: add viget group
+- name: add jflynn group
   group:
-    name: viget
+    name: jflynn
     state: present
 
-- name: add viget user
+- name: add jflynn user
   user:
-    name: viget
-    group: viget
+    name: jflynn
+    group: jflynn
     shell: /bin/bash

@@ -12,7 +12,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "fly-bastion"
+  ami_name      = "fly-bastion-${regex_replace(timestamp(), "[^a-zA-Z0-9-]", "")}"
   instance_type = "t2.micro"
   region        = "us-east-1"
   source_ami_filter {
