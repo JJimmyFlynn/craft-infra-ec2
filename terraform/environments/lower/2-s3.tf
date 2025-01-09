@@ -1,7 +1,11 @@
+resource "random_id" "s3_suffix" {
+  byte_length = 8
+}
+
 module "web_files_bucket" {
   source     = "../../modules/s3"
   context    = module.this.context
-  attributes = ["web-df789sd"]
+  attributes = ["web-${random_id.s3_suffix.dec}"]
 }
 
 resource "aws_s3_bucket_policy" "default" {
@@ -10,8 +14,8 @@ resource "aws_s3_bucket_policy" "default" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "Restrict to S3 VPCE"
-        Effect = "DENY"
+        Sid = "Allow S3 VPCE"
+        Effect = "ALLOW"
         Principal = "*"
         Action = "s3:*"
         Resource = [
@@ -19,7 +23,7 @@ resource "aws_s3_bucket_policy" "default" {
           "${module.web_files_bucket.bucket_arn}/*"
         ]
         Condition = {
-          StringNotEquals = {
+          StringEquals = {
             "aws:sourceVpce" = aws_vpc_endpoint.app_storage_s3_endpoint.id
           }
         }

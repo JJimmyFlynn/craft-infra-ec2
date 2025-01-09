@@ -5,8 +5,6 @@ module "ec2_instance_role_label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
 
-  name = "instance-role"
-
   context = module.this.context
 }
 
@@ -25,9 +23,19 @@ data "aws_iam_policy_document" "ec2_assume_role_policy" {
   }
 }
 
-resource "aws_iam_role" "ec2_instance_role" {
+resource "aws_iam_role" "webserver_instance_role" {
+  name = "${module.ec2_instance_role_label.id}-instance-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role_policy.json
-  managed_policy_arns = [data.aws_iam_policy.managed_ssm_policy.arn]
 
   tags = module.ec2_instance_role_label.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_instance_role" {
+  policy_arn  = data.aws_iam_policy.managed_ssm_policy.arn
+  role        = aws_iam_role.webserver_instance_role.name
+}
+
+resource "aws_iam_instance_profile" "webserver_instance_profile" {
+  name = module.this.id
+  role = aws_iam_role.webserver_instance_role.name
 }

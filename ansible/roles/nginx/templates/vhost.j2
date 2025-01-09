@@ -1,7 +1,7 @@
 server {
-    listen                  {{ item.listen_port | default('80') }} http2;
+    listen                  {{ item.listen_port | default('80') }};
 {% if item.listen_on_ipv6 is defined %}
-    listen                  [::]:{{ item.listen_port | default('80') }} http2;
+    listen                  [::]:{{ item.listen_port | default('80') }};
 {% endif %}
     server_name             {{ item.server_name  }};
     set                     $base {{ item.base }};

@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "5.54.1"
+    }
+  }
+}
 locals {
   az_count = var.vpc_az_count
 }
@@ -111,15 +119,6 @@ resource "aws_route_table_association" "private_web_access" {
   subnet_id      = element(aws_subnet.private.*.id, count.index)
 }
 
-/****************************************
-* Load Balancer
-*****************************************/
-resource "aws_alb" "load_balancer" {
-  load_balancer_type = "application"
-  subnets            = aws_subnet.public.*.id
-  security_groups    = [aws_security_group.web_dmz.id]
-  tags               = module.this.tags
-}
 
 /****************************************
 * Cloudwatch VPC Interface Endpoint
