@@ -1,3 +1,6 @@
+/****************************************
+* Aurora Serverless RDS
+*****************************************/
 resource "aws_db_subnet_group" "default" {
   name       = module.this.id
   subnet_ids = aws_subnet.private.*.id

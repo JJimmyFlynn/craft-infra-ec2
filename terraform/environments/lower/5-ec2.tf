@@ -1,3 +1,4 @@
+// AMI source for webserver
 data "aws_ami" "web" {
   owners = ["self"]
   most_recent = true
@@ -8,6 +9,9 @@ data "aws_ami" "web" {
   }
 }
 
+/****************************************
+* EC2 Launch Template
+*****************************************/
 resource "aws_launch_template" "web" {
   name                   = module.this.id
   image_id               = data.aws_ami.web.id
@@ -25,6 +29,9 @@ resource "aws_launch_template" "web" {
   }
 }
 
+/****************************************
+* Autoscaling Group
+*****************************************/
 resource aws_autoscaling_group "web" {
   name             = "${module.this.id}-web"
   min_size         = 1

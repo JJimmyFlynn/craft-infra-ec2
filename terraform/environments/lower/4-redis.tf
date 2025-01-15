@@ -1,3 +1,6 @@
+/****************************************
+* Redis Elasticache
+*****************************************/
 resource "aws_elasticache_parameter_group" "default" {
   family = "redis7"
   name   = module.this.id

@@ -19,6 +19,7 @@ resource "aws_security_group" "web_dmz" {
   vpc_id = aws_vpc.default.id
   name   = module.web_dmz_sg_label.id
   tags   = module.web_dmz_sg_label.tags
+  description = "Allow external web traffic on http(s)"
 
   lifecycle {
     create_before_destroy = true
@@ -31,10 +32,6 @@ resource "aws_vpc_security_group_ingress_rule" "web_dmz_allow_http" {
   cidr_ipv4       = "0.0.0.0/0"
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.web_dmz.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "web_dmz_allow_https" {
@@ -43,10 +40,6 @@ resource "aws_vpc_security_group_ingress_rule" "web_dmz_allow_https" {
   cidr_ipv4       = "0.0.0.0/0"
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.web_dmz.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 /****************************************
@@ -62,9 +55,10 @@ module "load_balancer_sg_label" {
 }
 
 resource "aws_security_group" "load_balancer" {
-  vpc_id = aws_vpc.default.id
-  name   = module.load_balancer_sg_label.id
-  tags   = module.load_balancer_sg_label.tags
+  vpc_id      = aws_vpc.default.id
+  name        = module.load_balancer_sg_label.id
+  tags        = module.load_balancer_sg_label.tags
+  description = "Allow http(s) inbound traffic to load balancer and outbound traffic to webserver SG"
 
   lifecycle {
     create_before_destroy = true
@@ -77,10 +71,6 @@ resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_http" {
   cidr_ipv4       = "0.0.0.0/0"
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.load_balancer.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_https" {
@@ -89,10 +79,22 @@ resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_https" {
   cidr_ipv4       = "0.0.0.0/0"
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.load_balancer.id
+}
 
-  lifecycle {
-    create_before_destroy = true
-  }
+resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_https" {
+  from_port         = 443
+  to_port           = 443
+  ip_protocol          = "tcp"
+  referenced_security_group_id = aws_security_group.webserver.id
+  security_group_id = aws_security_group.load_balancer.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_http" {
+  from_port         = 80
+  to_port           = 80
+  ip_protocol          = "tcp"
+  referenced_security_group_id = aws_security_group.webserver.id
+  security_group_id = aws_security_group.load_balancer.id
 }
 
 /****************************************
@@ -111,6 +113,7 @@ resource "aws_security_group" "webserver" {
   vpc_id = aws_vpc.default.id
   name   = module.webserver_sg_label.id
   tags   = module.webserver_sg_label.tags
+  description = "Allow inbound http(s) traffic from load balancer SG and allow outbound http(s) to VPC endpoints SG"
 
   lifecycle {
     create_before_destroy = true
@@ -123,10 +126,6 @@ resource "aws_vpc_security_group_ingress_rule" "webserver_allow_http" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.load_balancer.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "webserver_allow_https" {
@@ -135,10 +134,6 @@ resource "aws_vpc_security_group_ingress_rule" "webserver_allow_https" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.load_balancer.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_http" {
@@ -147,10 +142,6 @@ resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_http" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_https" {
@@ -159,10 +150,6 @@ resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_https" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 /****************************************
@@ -181,6 +168,7 @@ resource "aws_security_group" "vpc_endpoints" {
   vpc_id = aws_vpc.default.id
   name   = module.vpc_endpoints_sg_label.id
   tags   = module.vpc_endpoints_sg_label.tags
+  description = "Allow inbound http(s) traffic from webserver SG"
 
   lifecycle {
     create_before_destroy = true
@@ -193,10 +181,6 @@ resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_http" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.vpc_endpoints.id
   referenced_security_group_id = aws_security_group.webserver.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_https" {
@@ -205,8 +189,4 @@ resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_https" {
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.vpc_endpoints.id
   referenced_security_group_id = aws_security_group.webserver.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
