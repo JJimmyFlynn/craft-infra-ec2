@@ -1,4 +1,12 @@
 /****************************************
+* ACM TLS Cert
+*****************************************/
+data "aws_acm_certificate" "default" {
+  domain   = var.domain
+  statuses = ["ISSUED"]
+}
+
+/****************************************
 * Load Balancer
 *****************************************/
 resource "aws_alb" "default" {
@@ -16,9 +24,21 @@ resource aws_alb_target_group "default" {
   vpc_id = aws_vpc.default.id
 }
 
-resource "aws_lb_listener" "web_traffic" {
+resource "aws_lb_listener" "web_traffic_http" {
   load_balancer_arn = aws_alb.default.arn
   port = 80
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_alb_target_group.default.arn
+  }
+}
+
+resource "aws_lb_listener" "web_traffic_https" {
+  load_balancer_arn = aws_alb.default.arn
+  protocol = "HTTPS"
+  port = 443
+  certificate_arn = data.aws_acm_certificate.default.arn
 
   default_action {
     type = "forward"

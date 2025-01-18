@@ -3,6 +3,11 @@ variable "role_arn" {
   description = "ARN of the role for terraform to assume"
 }
 
+variable "domain" {
+  type = string
+  description = "Domain name of the application and ACM cert"
+}
+
 variable "vpc_az_count" {
   type        = number
   default     = 2
