@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+start_time=$SECONDS
+
+aws s3 cp s3://${bucket_uri}/europa.tar.gz /var/www/johnjflynn.net
+
+end_time=$SECONDS
+echo $((start_time - end_time)) > /script_time

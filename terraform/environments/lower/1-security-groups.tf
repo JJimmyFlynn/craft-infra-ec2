@@ -136,20 +136,40 @@ resource "aws_vpc_security_group_ingress_rule" "webserver_allow_https" {
   referenced_security_group_id = aws_security_group.load_balancer.id
 }
 
-resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_http" {
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_vpce_http" {
   from_port         = 80
   to_port           = 80
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
+  description = "Allow outbound http traffic to interface vpc endpoints security group"
 }
 
-resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_https" {
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_vpce_https" {
   from_port         = 443
   to_port           = 443
   ip_protocol          = "tcp"
   security_group_id = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
+  description = "Allow outbound https traffic to interface vpc endpoints security group"
+}
+
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_http" {
+  from_port         = 80
+  to_port           = 80
+  ip_protocol          = "tcp"
+  security_group_id = aws_security_group.webserver.id
+  prefix_list_id = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
+  description = "Allow outbound http traffic to s3 gateway vpc endpoint prefix list"
+}
+
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_https" {
+  from_port         = 443
+  to_port           = 443
+  ip_protocol          = "tcp"
+  security_group_id = aws_security_group.webserver.id
+  prefix_list_id = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
+  description = "Allow outbound https traffic to s3 gateway vpc endpoint prefix list"
 }
 
 /****************************************
