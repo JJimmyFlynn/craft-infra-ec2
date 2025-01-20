@@ -1,10 +1,10 @@
 variable "role_arn" {
-  type = string
+  type        = string
   description = "ARN of the role for terraform to assume"
 }
 
 variable "domain" {
-  type = string
+  type        = string
   description = "Domain name of the application and ACM cert"
 }
 
@@ -43,19 +43,19 @@ variable "redis_instance_count" {
 }
 
 variable "autoscaling_min_quantity" {
-  type = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Minimum ec2 instances for the autoscaling group"
 }
 
 variable "autoscaling_max_quantity" {
-  type = number
-  default = 3
+  type        = number
+  default     = 3
   description = "Maximum ec2 instances for the autoscaling group"
 }
 
 variable "autoscaling_cpu_tracking_target" {
-  type = number
-  default = 60
+  type        = number
+  default     = 60
   description = "The target average CPU usage of the autoscaling group used in the target tracking autoscaling policy"
 }

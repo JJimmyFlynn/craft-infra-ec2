@@ -15,7 +15,7 @@ resource "aws_rds_cluster" "default" {
   manage_master_user_password = true
   master_username             = "admin"
   db_subnet_group_name        = aws_db_subnet_group.default.name
-  skip_final_snapshot = true
+  skip_final_snapshot         = true
 
 
   tags = module.this.tags

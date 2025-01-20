@@ -116,10 +116,10 @@ resource "aws_route_table_association" "private_web_access" {
 * Cloudwatch VPC Interface Endpoint
 *****************************************/
 resource "aws_vpc_endpoint" "cloudwatch_endpoint" {
-  service_name      = "com.amazonaws.us-east-1.logs"
-  vpc_id            = aws_vpc.default.id
-  vpc_endpoint_type = "Interface"
-  subnet_ids        = aws_subnet.private.*.id
+  service_name        = "com.amazonaws.us-east-1.logs"
+  vpc_id              = aws_vpc.default.id
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private.*.id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 }
@@ -139,10 +139,10 @@ resource "aws_vpc_endpoint" "app_storage_s3_endpoint" {
 * SSM Interface Endpoint
 *****************************************/
 resource "aws_vpc_endpoint" "ssm_endpoint" {
-  service_name      = "com.amazonaws.us-east-1.ssm"
-  vpc_id            = aws_vpc.default.id
-  vpc_endpoint_type = "Interface"
-  subnet_ids        = aws_subnet.private.*.id
+  service_name        = "com.amazonaws.us-east-1.ssm"
+  vpc_id              = aws_vpc.default.id
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private.*.id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 }
@@ -151,10 +151,10 @@ resource "aws_vpc_endpoint" "ssm_endpoint" {
 * SSM Messages Interface Endpoint
 *****************************************/
 resource "aws_vpc_endpoint" "ssm_messages_endpoint" {
-  service_name      = "com.amazonaws.us-east-1.ssmmessages"
-  vpc_id            = aws_vpc.default.id
-  vpc_endpoint_type = "Interface"
-  subnet_ids        = aws_subnet.private.*.id
+  service_name        = "com.amazonaws.us-east-1.ssmmessages"
+  vpc_id              = aws_vpc.default.id
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private.*.id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 }
@@ -163,10 +163,10 @@ resource "aws_vpc_endpoint" "ssm_messages_endpoint" {
 * SSM Contact Interface Endpoint
 *****************************************/
 resource "aws_vpc_endpoint" "ssm_contacts_endpoint" {
-  service_name      = "com.amazonaws.us-east-1.ssm-contacts"
-  vpc_id            = aws_vpc.default.id
-  vpc_endpoint_type = "Interface"
-  subnet_ids        = [aws_subnet.private[0].id]
+  service_name        = "com.amazonaws.us-east-1.ssm-contacts"
+  vpc_id              = aws_vpc.default.id
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private[0].id]
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 }

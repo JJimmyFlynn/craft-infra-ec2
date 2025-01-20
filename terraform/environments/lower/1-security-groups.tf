@@ -16,9 +16,9 @@ module "web_dmz_sg_label" {
 }
 
 resource "aws_security_group" "web_dmz" {
-  vpc_id = aws_vpc.default.id
-  name   = module.web_dmz_sg_label.id
-  tags   = module.web_dmz_sg_label.tags
+  vpc_id      = aws_vpc.default.id
+  name        = module.web_dmz_sg_label.id
+  tags        = module.web_dmz_sg_label.tags
   description = "Allow external web traffic on http(s)"
 
   lifecycle {
@@ -29,16 +29,16 @@ resource "aws_security_group" "web_dmz" {
 resource "aws_vpc_security_group_ingress_rule" "web_dmz_allow_http" {
   from_port         = 80
   to_port           = 80
-  cidr_ipv4       = "0.0.0.0/0"
-  ip_protocol          = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.web_dmz.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "web_dmz_allow_https" {
   from_port         = 443
   to_port           = 443
-  cidr_ipv4       = "0.0.0.0/0"
-  ip_protocol          = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.web_dmz.id
 }
 
@@ -68,33 +68,33 @@ resource "aws_security_group" "load_balancer" {
 resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_http" {
   from_port         = 80
   to_port           = 80
-  cidr_ipv4       = "0.0.0.0/0"
-  ip_protocol          = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_https" {
   from_port         = 443
   to_port           = 443
-  cidr_ipv4       = "0.0.0.0/0"
-  ip_protocol          = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_https" {
-  from_port         = 443
-  to_port           = 443
-  ip_protocol          = "tcp"
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.webserver.id
-  security_group_id = aws_security_group.load_balancer.id
+  security_group_id            = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_http" {
-  from_port         = 80
-  to_port           = 80
-  ip_protocol          = "tcp"
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.webserver.id
-  security_group_id = aws_security_group.load_balancer.id
+  security_group_id            = aws_security_group.load_balancer.id
 }
 
 /****************************************
@@ -110,9 +110,9 @@ module "webserver_sg_label" {
 }
 
 resource "aws_security_group" "webserver" {
-  vpc_id = aws_vpc.default.id
-  name   = module.webserver_sg_label.id
-  tags   = module.webserver_sg_label.tags
+  vpc_id      = aws_vpc.default.id
+  name        = module.webserver_sg_label.id
+  tags        = module.webserver_sg_label.tags
   description = "Allow inbound http(s) traffic from load balancer SG and allow outbound http(s) to VPC endpoints SG"
 
   lifecycle {
@@ -121,55 +121,55 @@ resource "aws_security_group" "webserver" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "webserver_allow_http" {
-  from_port         = 80
-  to_port           = 80
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.webserver.id
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "webserver_allow_https" {
-  from_port         = 443
-  to_port           = 443
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.webserver.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_vpce_http" {
-  from_port         = 80
-  to_port           = 80
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.webserver.id
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
-  description = "Allow outbound http traffic to interface vpc endpoints security group"
+  description                  = "Allow outbound http traffic to interface vpc endpoints security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_vpce_https" {
-  from_port         = 443
-  to_port           = 443
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.webserver.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.vpc_endpoints.id
-  description = "Allow outbound https traffic to interface vpc endpoints security group"
+  description                  = "Allow outbound https traffic to interface vpc endpoints security group"
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_http" {
   from_port         = 80
   to_port           = 80
-  ip_protocol          = "tcp"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.webserver.id
-  prefix_list_id = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
-  description = "Allow outbound http traffic to s3 gateway vpc endpoint prefix list"
+  prefix_list_id    = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
+  description       = "Allow outbound http traffic to s3 gateway vpc endpoint prefix list"
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_https" {
   from_port         = 443
   to_port           = 443
-  ip_protocol          = "tcp"
+  ip_protocol       = "tcp"
   security_group_id = aws_security_group.webserver.id
-  prefix_list_id = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
-  description = "Allow outbound https traffic to s3 gateway vpc endpoint prefix list"
+  prefix_list_id    = aws_vpc_endpoint.app_storage_s3_endpoint.prefix_list_id
+  description       = "Allow outbound https traffic to s3 gateway vpc endpoint prefix list"
 }
 
 /****************************************
@@ -185,9 +185,9 @@ module "vpc_endpoints_sg_label" {
 }
 
 resource "aws_security_group" "vpc_endpoints" {
-  vpc_id = aws_vpc.default.id
-  name   = module.vpc_endpoints_sg_label.id
-  tags   = module.vpc_endpoints_sg_label.tags
+  vpc_id      = aws_vpc.default.id
+  name        = module.vpc_endpoints_sg_label.id
+  tags        = module.vpc_endpoints_sg_label.tags
   description = "Allow inbound http(s) traffic from webserver SG"
 
   lifecycle {
@@ -196,17 +196,17 @@ resource "aws_security_group" "vpc_endpoints" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_http" {
-  from_port         = 80
-  to_port           = 80
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.vpc_endpoints.id
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.vpc_endpoints.id
   referenced_security_group_id = aws_security_group.webserver.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_https" {
-  from_port         = 443
-  to_port           = 443
-  ip_protocol          = "tcp"
-  security_group_id = aws_security_group.vpc_endpoints.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.vpc_endpoints.id
   referenced_security_group_id = aws_security_group.webserver.id
 }

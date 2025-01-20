@@ -9,7 +9,7 @@ resource "aws_elasticache_parameter_group" "default" {
 }
 
 resource "aws_elasticache_subnet_group" "default" {
-  name = module.this.id
+  name       = module.this.id
   subnet_ids = aws_subnet.private.*.id
 }
 
@@ -21,7 +21,7 @@ resource "aws_elasticache_cluster" "default" {
   parameter_group_name = aws_elasticache_parameter_group.default.name
   engine_version       = "7.1"
   port                 = 6379
-  subnet_group_name = aws_elasticache_subnet_group.default.name
+  subnet_group_name    = aws_elasticache_subnet_group.default.name
 
   tags = module.this.tags
 }

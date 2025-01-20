@@ -1,10 +1,10 @@
 // AMI source for webserver
 data "aws_ami" "web" {
-  owners = ["self"]
+  owners      = ["self"]
   most_recent = true
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["fly-php-webserver*"]
   }
 }
@@ -34,21 +34,21 @@ resource "aws_launch_template" "web" {
 /****************************************
 * Autoscaling Group
 *****************************************/
-resource aws_autoscaling_group "web" {
-  name             = "${module.this.id}-web"
-  min_size         = var.autoscaling_min_quantity
-  max_size         = var.autoscaling_max_quantity
-  health_check_type = "ELB"
+resource "aws_autoscaling_group" "web" {
+  name                = "${module.this.id}-web"
+  min_size            = var.autoscaling_min_quantity
+  max_size            = var.autoscaling_max_quantity
+  health_check_type   = "ELB"
   vpc_zone_identifier = aws_subnet.private.*.id
   launch_template {
-    id = aws_launch_template.web.id
+    id      = aws_launch_template.web.id
     version = "$Latest"
   }
 }
 
-resource aws_autoscaling_attachment "default" {
+resource "aws_autoscaling_attachment" "default" {
   autoscaling_group_name = aws_autoscaling_group.web.id
-  lb_target_group_arn = aws_alb_target_group.default.arn
+  lb_target_group_arn    = aws_alb_target_group.default.arn
 }
 
 /****************************************
@@ -57,7 +57,7 @@ resource aws_autoscaling_attachment "default" {
 resource "aws_autoscaling_policy" "cpu_tracking" {
   autoscaling_group_name = aws_autoscaling_group.web.name
   name                   = "${module.this.id}-cpu-tracking"
-  policy_type = "TargetTrackingScaling"
+  policy_type            = "TargetTrackingScaling"
   target_tracking_configuration {
     target_value = var.autoscaling_cpu_tracking_target
     predefined_metric_specification {

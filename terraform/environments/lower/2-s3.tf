@@ -17,10 +17,10 @@ resource "aws_s3_bucket_policy" "web_assets" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "Allow S3 VPCE"
-        Effect = "ALLOW"
+        Sid       = "Allow S3 VPCE"
+        Effect    = "ALLOW"
         Principal = "*"
-        Action = "s3:*"
+        Action    = "s3:*"
         Resource = [
           module.web_files_bucket.bucket_arn,
           "${module.web_files_bucket.bucket_arn}/*"
@@ -50,10 +50,10 @@ resource "aws_s3_bucket_policy" "artifact" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "Allow S3 VPCE"
-        Effect = "ALLOW"
+        Sid       = "Allow S3 VPCE"
+        Effect    = "ALLOW"
         Principal = "*"
-        Action = "s3:*"
+        Action    = "s3:*"
         Resource = [
           module.artifact_bucket.bucket_arn,
           "${module.artifact_bucket.bucket_arn}/*"
