@@ -158,15 +158,3 @@ resource "aws_vpc_endpoint" "ssm_messages_endpoint" {
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 }
-
-/****************************************
-* SSM Contact Interface Endpoint
-*****************************************/
-resource "aws_vpc_endpoint" "ssm_contacts_endpoint" {
-  service_name        = "com.amazonaws.us-east-1.ssm-contacts"
-  vpc_id              = aws_vpc.default.id
-  vpc_endpoint_type   = "Interface"
-  subnet_ids          = [aws_subnet.private[0].id]
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
-  private_dns_enabled = true
-}
