@@ -2,6 +2,7 @@ remove_default_vhost: True
 vhosts:
   - server_name: johnjflynn.net
     base: /var/www/johnjflynn.net
+    root: web
     index: index.php
     template_type: php
     redirect_http: False
