@@ -18,7 +18,7 @@ resource "aws_launch_template" "web" {
   instance_type          = "t3.micro"
   update_default_version = true
   vpc_security_group_ids = [aws_security_group.webserver.id]
-  user_data = base64encode(templatefile("../../scripts/ec2-init.sh.tftpl", {
+  user_data = base64encode(templatefile("../../scripts/ec2-init.sh", {
     bucket_uri = module.artifact_bucket.bucket
   }))
 
