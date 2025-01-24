@@ -12,6 +12,20 @@ data "aws_ami" "web" {
 /****************************************
 * EC2 Launch Template
 *****************************************/
+module "web_server_launch_template" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  attributes = ["webserver"]
+
+  tags = {
+    role = "webserver"
+    tier = "frontend"
+  }
+
+  context = module.this.context
+}
+
 resource "aws_launch_template" "web" {
   name                   = module.this.id
   image_id               = data.aws_ami.web.id
@@ -22,6 +36,11 @@ resource "aws_launch_template" "web" {
     bucket_uri = module.artifact_bucket.bucket
   }))
 
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = module.web_server_launch_template.tags
+  }
   iam_instance_profile {
     arn = aws_iam_instance_profile.webserver_instance_profile.arn
   }

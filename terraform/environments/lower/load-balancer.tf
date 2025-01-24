@@ -17,11 +17,25 @@ resource "aws_alb" "default" {
   tags               = module.this.tags
 }
 
+module "frontend_target_group_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  attributes = ["frontend"]
+
+  tags = {
+    tier = "frontend"
+  }
+
+  context = module.this.context
+}
+
 resource "aws_alb_target_group" "default" {
-  name     = module.this.id
+  name     = module.frontend_target_group_label.name
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.default.id
+  tags     = module.frontend_target_group_label.tags
 }
 
 resource "aws_lb_listener" "web_traffic_http" {

@@ -172,6 +172,15 @@ resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_
   description       = "Allow outbound https traffic to s3 gateway vpc endpoint prefix list"
 }
 
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_rds" {
+  from_port         = 3306
+  to_port           = 3306
+  ip_protocol       = "tcp"
+  security_group_id = aws_security_group.webserver.id
+  referenced_security_group_id = aws_security_group.rds_allow_webserver.id
+  description       = "Allow outbound traffic to RDS SG"
+}
+
 /****************************************
 * VPC Endpoints
 *****************************************/
@@ -208,5 +217,36 @@ resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_allow_https" {
   to_port                      = 443
   ip_protocol                  = "tcp"
   security_group_id            = aws_security_group.vpc_endpoints.id
+  referenced_security_group_id = aws_security_group.webserver.id
+}
+
+/****************************************
+* RDS
+*****************************************/
+module "rds_sg_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  name = "rds-allow-webserver"
+
+  context = module.this.context
+}
+
+resource "aws_security_group" "rds_allow_webserver" {
+  vpc_id      = aws_vpc.default.id
+  name        = module.rds_sg_label.id
+  tags        = module.rds_sg_label.tags
+  description = "Allow inbound traffic from webserver SG"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "eds_allow_webser" {
+  from_port                    = 3306
+  to_port                      = 3306
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.rds_allow_webserver.id
   referenced_security_group_id = aws_security_group.webserver.id
 }

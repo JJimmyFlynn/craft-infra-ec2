@@ -9,14 +9,16 @@ resource "aws_db_subnet_group" "default" {
 }
 
 resource "aws_rds_cluster" "default" {
+  cluster_identifier          = module.this.id
   engine                      = "aurora-mysql"
   engine_version              = "8.0"
   engine_mode                 = "provisioned"
   manage_master_user_password = true
   master_username             = "admin"
+  database_name =             "craft"
   db_subnet_group_name        = aws_db_subnet_group.default.name
   skip_final_snapshot         = true
-
+  vpc_security_group_ids = [aws_security_group.rds_allow_webserver.id]
 
   tags = module.this.tags
 
@@ -27,6 +29,7 @@ resource "aws_rds_cluster" "default" {
 }
 
 resource "aws_rds_cluster_instance" "default" {
+  identifier           = "${module.this.name}-writer"
   count                = var.aurora_instance_count
   cluster_identifier   = aws_rds_cluster.default.id
   engine               = aws_rds_cluster.default.engine

@@ -1,11 +1,32 @@
 ---
+- name: Make sure we have a wheel group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow wheel group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
 - name: add jflynn group
   group:
     name: jflynn
+    state: present
+
+- name: add www-data group
+  group:
+    name: www-data
     state: present
 
 - name: add jflynn user
   user:
     name: jflynn
     group: jflynn
+    groups:
+      - www-data
+      - wheel
     shell: /bin/bash
