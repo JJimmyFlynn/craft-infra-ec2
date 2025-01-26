@@ -13,6 +13,7 @@ function set_env_variables() {
       var_value=$(jq -cr '.Value' <<< "$item")
 
       echo "$var_name=$var_value" >> "$site_path/.env"
+      chown "$site_path/.env" www-data:
     done
 }
 

@@ -243,10 +243,41 @@ resource "aws_security_group" "rds_allow_webserver" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "eds_allow_webser" {
+resource "aws_vpc_security_group_ingress_rule" "rds_allow_webserver" {
   from_port                    = 3306
   to_port                      = 3306
   ip_protocol                  = "tcp"
   security_group_id            = aws_security_group.rds_allow_webserver.id
+  referenced_security_group_id = aws_security_group.webserver.id
+}
+
+/****************************************
+* Redis
+*****************************************/
+module "redis_sg_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  name = "redis-allow-webserver"
+
+  context = module.this.context
+}
+
+resource "aws_security_group" "redis_allow_webserver" {
+  vpc_id = aws_vpc.default.id
+  name = module.redis_sg_label.id
+  tags = module.redis_sg_label.tags
+  description = "Allow inbound access to redis from webserver SG"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_allow_webserver" {
+  from_port                    = 6379
+  to_port                      = 6379
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.redis_allow_webserver.id
   referenced_security_group_id = aws_security_group.webserver.id
 }
