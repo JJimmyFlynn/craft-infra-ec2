@@ -274,7 +274,7 @@ resource "aws_security_group" "redis_allow_webserver" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "rds_allow_webserver" {
+resource "aws_vpc_security_group_ingress_rule" "redis_allow_webserver" {
   from_port                    = 6379
   to_port                      = 6379
   ip_protocol                  = "tcp"
