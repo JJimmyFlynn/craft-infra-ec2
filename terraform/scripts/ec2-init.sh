@@ -2,7 +2,7 @@
 set -euo pipefail
 
 function set_env_variables() {
-    params=$(aws ssm get-parameters-by-path --path "$parameter_store_path")
+    params=$(aws ssm get-parameters-by-path --with-decryption --path "$parameter_store_path")
 
     if (( $(echo "$params" | jq '.Parameters | length') = 0 )) ; then
         return 1
