@@ -181,6 +181,15 @@ resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_rds" {
   description                  = "Allow outbound traffic to RDS SG"
 }
 
+resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_redis" {
+  from_port                    = 6739
+  to_port                      = 6739
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
+  referenced_security_group_id = aws_security_group.redis_allow_webserver.id
+  description                  = "Allow outbound traffic to redis SG"
+}
+
 /****************************************
 * VPC Endpoints
 *****************************************/
