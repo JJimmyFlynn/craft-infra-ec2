@@ -64,3 +64,8 @@ variable "autoscaling_cpu_tracking_target" {
   default     = 60
   description = "The target average CPU usage of the autoscaling group used in the target tracking autoscaling policy"
 }
+
+variable "parameter_store_path" {
+  type = string
+  description = "The path at which ssm parameters are stored for this application/stage. e.g. /example-application/dev"
+}

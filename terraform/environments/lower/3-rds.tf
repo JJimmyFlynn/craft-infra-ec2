@@ -1,6 +1,10 @@
 /****************************************
 * Aurora Serverless RDS
 *****************************************/
+data "aws_ssm_parameter" "rds_password" {
+  name = "/example-application/dev/CRAFT_DB_PASSWORD"
+}
+
 resource "aws_db_subnet_group" "default" {
   name       = module.this.id
   subnet_ids = aws_subnet.private.*.id
@@ -13,8 +17,8 @@ resource "aws_rds_cluster" "default" {
   engine                      = "aurora-mysql"
   engine_version              = "8.0"
   engine_mode                 = "provisioned"
-  manage_master_user_password = true
   master_username             = "admin"
+  master_password             = data.aws_ssm_parameter.rds_password.value
   database_name =             "craft"
   db_subnet_group_name        = aws_db_subnet_group.default.name
   skip_final_snapshot         = true
