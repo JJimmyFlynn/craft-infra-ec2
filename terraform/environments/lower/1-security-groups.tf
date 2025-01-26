@@ -173,12 +173,12 @@ resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_s3_vpce_
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_allow_outbound_rds" {
-  from_port         = 3306
-  to_port           = 3306
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.webserver.id
+  from_port                    = 3306
+  to_port                      = 3306
+  ip_protocol                  = "tcp"
+  security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.rds_allow_webserver.id
-  description       = "Allow outbound traffic to RDS SG"
+  description                  = "Allow outbound traffic to RDS SG"
 }
 
 /****************************************
@@ -264,9 +264,9 @@ module "redis_sg_label" {
 }
 
 resource "aws_security_group" "redis_allow_webserver" {
-  vpc_id = aws_vpc.default.id
-  name = module.redis_sg_label.id
-  tags = module.redis_sg_label.tags
+  vpc_id      = aws_vpc.default.id
+  name        = module.redis_sg_label.id
+  tags        = module.redis_sg_label.tags
   description = "Allow inbound access to redis from webserver SG"
 
   lifecycle {

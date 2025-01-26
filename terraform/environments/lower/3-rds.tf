@@ -13,15 +13,15 @@ resource "aws_db_subnet_group" "default" {
 }
 
 resource "aws_rds_cluster" "default" {
-  cluster_identifier          = module.this.id
-  engine                      = "aurora-mysql"
-  engine_version              = "8.0"
-  engine_mode                 = "provisioned"
-  master_username             = "admin"
-  master_password             = data.aws_ssm_parameter.rds_password.value
-  database_name =             "craft"
-  db_subnet_group_name        = aws_db_subnet_group.default.name
-  skip_final_snapshot         = true
+  cluster_identifier     = module.this.id
+  engine                 = "aurora-mysql"
+  engine_version         = "8.0"
+  engine_mode            = "provisioned"
+  master_username        = "admin"
+  master_password        = data.aws_ssm_parameter.rds_password.value
+  database_name          = "craft"
+  db_subnet_group_name   = aws_db_subnet_group.default.name
+  skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.rds_allow_webserver.id]
 
   tags = module.this.tags

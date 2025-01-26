@@ -22,7 +22,7 @@ resource "aws_elasticache_cluster" "default" {
   engine_version       = "7.1"
   port                 = 6379
   subnet_group_name    = aws_elasticache_subnet_group.default.name
-  security_group_ids = [aws_security_group.redis_allow_webserver.id]
+  security_group_ids   = [aws_security_group.redis_allow_webserver.id]
 
   tags = module.this.tags
 }
