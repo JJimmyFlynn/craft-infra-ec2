@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "ec2_assume_role_policy" {
 
 data "aws_iam_policy_document" "get_sss_parameters_by_path" {
   statement {
-    sid = "Allow access to environment parameters"
+    sid = "AllowAccessToEnvironmentParameters"
     actions = ["ssm:GetParametersByPath"]
     effect = "Allow"
 
