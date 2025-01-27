@@ -63,6 +63,8 @@ resource "aws_autoscaling_group" "web" {
     id      = aws_launch_template.web.id
     version = "$Latest"
   }
+
+  depends_on = [aws_rds_cluster.default, aws_elasticache_cluster.default]
 }
 
 resource "aws_autoscaling_attachment" "default" {

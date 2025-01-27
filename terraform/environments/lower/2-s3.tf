@@ -17,7 +17,7 @@ resource "aws_s3_bucket_policy" "web_assets" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "Allow S3 VPCE"
+        Sid       = "AllowS3VPCE"
         Effect    = "ALLOW"
         Principal = "*"
         Action    = "s3:*"
@@ -27,7 +27,23 @@ resource "aws_s3_bucket_policy" "web_assets" {
         ]
         Condition = {
           StringEquals = {
-            "aws:sourceVpce" = aws_vpc_endpoint.app_storage_s3_endpoint.id
+            "AWS:sourceVpce" = aws_vpc_endpoint.app_storage_s3_endpoint.id
+          }
+        }
+      },
+      {
+        Sid = "AllowCloudFrontReads"
+        Effect = "Allow"
+        Action = "s3:GetObject"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Resource = [
+          "${module.web_files_bucket.bucket_arn}/*"
+        ]
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.craft_europa.arn
           }
         }
       }
@@ -50,7 +66,7 @@ resource "aws_s3_bucket_policy" "artifact" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "Allow S3 VPCE"
+        Sid       = "AllowS3VPCE"
         Effect    = "ALLOW"
         Principal = "*"
         Action    = "s3:*"
@@ -60,7 +76,7 @@ resource "aws_s3_bucket_policy" "artifact" {
         ]
         Condition = {
           StringEquals = {
-            "aws:sourceVpce" = aws_vpc_endpoint.app_storage_s3_endpoint.id
+            "AWS:sourceVpce" = aws_vpc_endpoint.app_storage_s3_endpoint.id
           }
         }
       }
