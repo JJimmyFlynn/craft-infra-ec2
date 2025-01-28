@@ -65,7 +65,7 @@ resource "aws_internet_gateway" "default" {
 * instances need outbound web access
 *****************************************/
 module "nat_gateways" {
-  source              = "../../modules/nat-gateway"
+  source              = "../modules/nat-gateway"
   az_count            = local.az_count
   subnet_ids          = aws_subnet.public.*.id
   internet_gateway_id = aws_internet_gateway.default.id

@@ -6,7 +6,7 @@ resource "random_id" "s3_suffix" {
 * Web Assets Bucket
 *****************************************/
 module "web_files_bucket" {
-  source     = "../../modules/s3"
+  source     = "../modules/s3"
   context    = module.this.context
   attributes = ["web-${random_id.s3_suffix.dec}"]
 }
@@ -55,7 +55,7 @@ resource "aws_s3_bucket_policy" "web_assets" {
 * Application Artifact Bucket
 *****************************************/
 module "artifact_bucket" {
-  source     = "../../modules/s3"
+  source     = "../modules/s3"
   context    = module.this.context
   attributes = ["artifact-${random_id.s3_suffix.dec}"]
 }

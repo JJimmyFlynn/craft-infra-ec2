@@ -3,7 +3,6 @@ terraform {
     bucket       = "flynn-tfstate-php-infra-poc"
     key          = "terraform/tfstate/dev"
     region       = "us-east-1"
-    use_lockfile = true
   }
 
   required_providers {
