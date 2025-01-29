@@ -1,0 +1,27 @@
+name: Build Artifact and Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - sample-application/**/*
+env:
+  AWS_EXECUTION_ROLE: ${{secrets.AWS_EXECUTION_ROLE}}
+jobs:
+  BuildArtifact:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{env.AWS_EXECUTION_ROLE}}
+          aws-region: us-east-1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'

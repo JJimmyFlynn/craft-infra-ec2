@@ -1,0 +1,14 @@
+region      = "us-east-1"
+namespace   = "fly"
+stage       = "dev"
+environment = "ue1"
+name        = "example-application"
+domain      = "ec2.johnjflynn.net"
+role_arn    = "someARN"
+tags = {
+  "Managed by Terraform" = "True"
+  "Created By"           = "Flynndustries"
+}
+vpc_az_count         = 2
+redis_node_type      = "cache.t4g.micro"
+parameter_store_path = "/example-application/dev"
