@@ -18,6 +18,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     sampled_requests_enabled   = false
   }
 
+  /*=========== AWS Common Rules ===========*/
   rule {
     name     = "aws-common-rules"
     priority = 0
@@ -40,8 +41,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Known Bad Inputs ===========*/
   rule {
-    name     = "aws-kown-bad-inputs"
+    name     = "aws-known-bad-inputs"
     priority = 1
 
     override_action {
@@ -62,6 +64,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Common SQL ===========*/
   rule {
     name     = "aws-sql-common"
     priority = 2
@@ -84,6 +87,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Common Linux ===========*/
   rule {
     name     = "aws-common-linux"
     priority = 3
@@ -106,6 +110,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Common Unix ===========*/
   rule {
     name     = "aws-common-unix"
     priority = 4
@@ -128,6 +133,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Common PHP ===========*/
   rule {
     name     = "aws-common-php"
     priority = 5
@@ -150,6 +156,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS IP Reputation ===========*/
   rule {
     name     = "aws-ip-reputation"
     priority = 6
@@ -172,6 +179,7 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
   }
 
+  /*=========== AWS Bot Protection ===========*/
   rule {
     name     = "aws-bot-protection"
     priority = 7
