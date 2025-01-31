@@ -3,6 +3,7 @@ terraform {
     bucket       = "flynn-tfstate-php-infra-poc"
     key          = "terraform/tfstate/dev"
     region       = "us-east-1"
+    dynamodb_table = "php-infra-state-lock"
   }
 
   required_providers {
