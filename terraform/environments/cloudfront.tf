@@ -7,6 +7,12 @@ resource "aws_cloudfront_origin_access_control" "default" {
 
 resource "aws_cloudfront_distribution" "craft_europa" {
   enabled = true
+
+  viewer_certificate {
+    acm_certificate_arn = "arn:aws:acm:us-east-1:654654165875:certificate/edca5b1d-8c5d-4121-a399-78e2fe75a583"
+    ssl_support_method = "sni-only"
+  }
+
   origin {
     domain_name              = module.web_files_bucket.bucket_domain_name
     origin_id                = module.web_files_bucket.bucket
@@ -22,10 +28,6 @@ resource "aws_cloudfront_distribution" "craft_europa" {
   }
 
   price_class = "PriceClass_100" // NA & EU
-
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
 
   restrictions {
     geo_restriction {

@@ -69,3 +69,11 @@ variable "parameter_store_path" {
   type        = string
   description = "The path at which ssm parameters are stored for this application/stage. e.g. /example-application/dev"
 }
+
+variable "cloudflare_api_token" {
+  type = string
+}
+
+variable "cloudflare_zone_id" {
+  type = string
+}

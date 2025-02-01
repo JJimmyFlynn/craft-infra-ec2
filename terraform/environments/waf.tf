@@ -27,10 +27,29 @@ resource "aws_wafv2_web_acl" "managed_rules" {
       none {}
     }
 
+
     statement {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
+
+        // Craft's asset uploads trigger this rule
+        rule_action_override {
+          action_to_use {
+            count {}
+          }
+
+          name = "CrossSiteScripting_BODY"
+        }
+
+        // Craft's asset uploads trigger this rule
+        rule_action_override {
+          action_to_use {
+            count {}
+          }
+
+          name = "SizeRestrictions_BODY"
+        }
       }
     }
 
