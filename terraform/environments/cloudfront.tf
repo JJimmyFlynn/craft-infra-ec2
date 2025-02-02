@@ -7,23 +7,31 @@ resource "aws_cloudfront_origin_access_control" "default" {
 
 resource "aws_cloudfront_distribution" "craft_europa" {
   enabled = true
+  aliases = [var.domain]
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:654654165875:certificate/edca5b1d-8c5d-4121-a399-78e2fe75a583"
+    acm_certificate_arn = data.aws_acm_certificate.default.arn
     ssl_support_method = "sni-only"
   }
 
   origin {
-    domain_name              = module.web_files_bucket.bucket_domain_name
-    origin_id                = module.web_files_bucket.bucket
-    origin_access_control_id = aws_cloudfront_origin_access_control.default.id
+    domain_name              = aws_alb.default.dns_name
+    origin_id                = aws_alb.default.dns_name
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "match-viewer"
+      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    }
   }
 
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = module.web_files_bucket.bucket
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6" // AWS Managed Cache Policy
+    target_origin_id       = aws_alb.default.dns_name
+    cache_policy_id        = "4cc15a8a-d715-48a4-82b8-cc0b614638fe" // AWS Managed - UseOriginCacheControlHeaders-QueryStrings
+    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" // AWS Managed - AllViewer
     viewer_protocol_policy = "allow-all"
   }
 

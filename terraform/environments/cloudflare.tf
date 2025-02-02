@@ -7,6 +7,6 @@ resource "cloudflare_dns_record" "default" {
   name = "ec2.johnjflynn.net"
   ttl = 60
   type = "CNAME"
-  content = aws_alb.default.dns_name
+  content = aws_cloudfront_distribution.craft_europa.domain_name
   proxied = false
 }

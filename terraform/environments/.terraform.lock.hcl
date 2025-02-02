@@ -5,6 +5,7 @@ provider "registry.opentofu.org/cloudflare/cloudflare" {
   version     = "5.0.0"
   constraints = "~> 5.0"
   hashes = [
+    "h1:gHw535qMM2sbtZTyeI9pyoAq4NOyMI7P78zZcHNfIkg=",
     "h1:uHDAGWE8joHsQdoWjeB6fYAUlHMMOUf4nU98VOWeYhY=",
     "zh:1acf018fef1e8eaf96372a6c6f42a8702f67299dc66c2151faba4f38bfbba6f2",
     "zh:2d2e18ee202b01c21ef15f2e1aaf3e6d0ba50a3ddceb88f96f5ce42b93f16bff",
