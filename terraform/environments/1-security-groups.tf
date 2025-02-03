@@ -58,38 +58,24 @@ resource "aws_security_group" "load_balancer" {
   vpc_id      = aws_vpc.default.id
   name        = module.load_balancer_sg_label.id
   tags        = module.load_balancer_sg_label.tags
-  description = "Allow http(s) inbound traffic to load balancer and outbound traffic to webserver SG"
+  description = "Allow https inbound traffic to load balancer from CloudFront and outbound traffic to webserver SG"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_http" {
-  from_port         = 80
-  to_port           = 80
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "tcp"
-  security_group_id = aws_security_group.load_balancer.id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_https" {
+resource "aws_vpc_security_group_ingress_rule" "load_balancer_allow_cloudfront_https" {
+  description = "Allow inbound traffic from CloudFront"
   from_port         = 443
   to_port           = 443
-  cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "tcp"
+  prefix_list_id = data.aws_ec2_managed_prefix_list.cloudfront_prefix_list.id
   security_group_id = aws_security_group.load_balancer.id
-}
-
-resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_https" {
-  from_port                    = 443
-  to_port                      = 443
-  ip_protocol                  = "tcp"
-  referenced_security_group_id = aws_security_group.webserver.id
-  security_group_id            = aws_security_group.load_balancer.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "load_balancer_allow_http" {
+  description = "Allow outbound traffic to webserver SG"
   from_port                    = 80
   to_port                      = 80
   ip_protocol                  = "tcp"
@@ -121,16 +107,9 @@ resource "aws_security_group" "webserver" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "webserver_allow_http" {
+  description = "Allow inbound traffic from ALB SG"
   from_port                    = 80
   to_port                      = 80
-  ip_protocol                  = "tcp"
-  security_group_id            = aws_security_group.webserver.id
-  referenced_security_group_id = aws_security_group.load_balancer.id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "webserver_allow_https" {
-  from_port                    = 443
-  to_port                      = 443
   ip_protocol                  = "tcp"
   security_group_id            = aws_security_group.webserver.id
   referenced_security_group_id = aws_security_group.load_balancer.id

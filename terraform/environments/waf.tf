@@ -1,12 +1,7 @@
-resource "aws_wafv2_web_acl_association" "web_alb" {
-  resource_arn = aws_alb.default.arn
-  web_acl_arn  = aws_wafv2_web_acl.managed_rules.arn
-}
-
 resource "aws_wafv2_web_acl" "managed_rules" {
   name  = module.this.id
-  description = "Managed rule groups to be associated with the ALB"
-  scope = "REGIONAL"
+  description = "Managed rule groups to be associated with Cloudfront"
+  scope = "CLOUDFRONT"
 
   default_action {
     allow {}
