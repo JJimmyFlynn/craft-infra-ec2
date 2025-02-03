@@ -2,10 +2,6 @@ locals {
   az_count = var.vpc_az_count
 }
 
-# Fetch AZs in the current region
-data "aws_availability_zones" "available" {
-}
-
 /****************************************
 * Base VPC
 *****************************************/

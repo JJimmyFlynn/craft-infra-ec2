@@ -1,12 +1,4 @@
 /****************************************
-* ACM TLS Cert
-*****************************************/
-data "aws_acm_certificate" "default" {
-  domain   = var.domain
-  statuses = ["ISSUED"]
-}
-
-/****************************************
 * Load Balancer
 *****************************************/
 resource "aws_alb" "default" {
