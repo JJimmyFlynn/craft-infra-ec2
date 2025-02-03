@@ -8,9 +8,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
   }
 
   visibility_config {
-    cloudwatch_metrics_enabled = false
+    cloudwatch_metrics_enabled = true
     metric_name                = "aws-managed-rules"
-    sampled_requests_enabled   = false
+    sampled_requests_enabled   = true
   }
 
   /*=========== AWS Common Rules ===========*/
@@ -49,9 +49,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-common-rules"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -72,9 +72,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-known-bad-inputs"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -95,9 +95,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-sql-common"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -118,9 +118,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-common-linux"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -141,9 +141,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-common-unix"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -164,9 +164,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-common-php"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -187,9 +187,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-ip-reputation"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -210,9 +210,9 @@ resource "aws_wafv2_web_acl" "managed_rules" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "aws-bot-protection"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 }
