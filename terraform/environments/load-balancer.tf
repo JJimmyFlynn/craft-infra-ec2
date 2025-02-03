@@ -28,6 +28,13 @@ resource "aws_alb_target_group" "default" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.default.id
   tags     = module.frontend_target_group_label.tags
+
+  health_check {
+    healthy_threshold = 3
+    interval = 15
+    path = "/actions/app/health-check"
+    protocol = "HTTP"
+  }
 }
 
 resource "aws_lb_listener" "web_traffic_http" {

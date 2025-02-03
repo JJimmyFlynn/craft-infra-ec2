@@ -36,10 +36,29 @@ return [
                     'hostname' => App::env('CRAFT_REDIS_ENDPOINT') ?: 'localhost',
                     'port' => 6379,
                     'password' => App::env('CRAFT_REDIS_PASSWORD') ?: null,
+                    'database' => 0,
                 ],
             ];
 
             return Craft::createObject($config);
         },
+        'session' => function() {
+            // Get the default component config:
+            $config = craft\helpers\App::sessionConfig();
+
+            // Replace component class:
+            $config['class'] = yii\redis\Session::class;
+
+            // Define additional properties:
+            $config['redis'] = [
+                'hostname' => App::env('CRAFT_REDIS_ENDPOINT') ?: 'localhost',
+                'port' => 6379,
+                'password' => App::env('CRAFT_REDIS_PASSWORD') ?: null,
+                'database' => 1,
+            ];
+
+            // Return the initialized component:
+            return Craft::createObject($config);
+        }
     ],
 ];
