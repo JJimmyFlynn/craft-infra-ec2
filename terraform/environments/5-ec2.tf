@@ -33,7 +33,9 @@ resource "aws_launch_template" "web" {
   update_default_version = true
   vpc_security_group_ids = [aws_security_group.webserver.id]
   user_data = base64encode(templatefile("../scripts/ec2-init.sh", {
-    bucket_uri = module.artifact_bucket.bucket
+    bucket_uri = module.artifact_bucket.bucket,
+    site_domain = var.domain,
+    parameter_store_path = var.parameter_store_path
   }))
 
   tag_specifications {
@@ -79,8 +81,10 @@ resource "aws_autoscaling_policy" "cpu_tracking" {
   autoscaling_group_name = aws_autoscaling_group.web.name
   name                   = "${module.this.id}-cpu-tracking"
   policy_type            = "TargetTrackingScaling"
+
   target_tracking_configuration {
     target_value = var.autoscaling_cpu_tracking_target
+
     predefined_metric_specification {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
