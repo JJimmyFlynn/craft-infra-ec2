@@ -51,3 +51,21 @@ The Web ACL is configured to use a set of AWS managed rulesets:
 - Common PHP
 - IP Reputation
 - Bot Protection
+
+### EC2
+The heart of this infrastructure is EC2. The VMs are deployed with a Launch Template using a custom AMI created by Packer/Ansible.
+
+All instances are deployed within private subnets and utilize VPC enpoints for communication with necessary AWS services.
+
+The instances are deployed in an auto-sacling group which uses a tracking policy to monitor the average CPU utilization and manage the number of instances. 
+A clound init sctipt fetches the latest application release artifact from an S3 bucket on instance creation and grabs the environment variables nesessary to run the application from SSM Parameter Store.
+
+### Security Groups
+
+| Security Group | Associated Resources | Inbount Rules | Outbound Rules |
+| -------------- | -------------------- | ------------- | -------------- |
+| Load Balancer  | Load Balancer        | `Port 443 from Cloudfront`| `Port 80 to Webserver SG` |
+| Webserver      | Webserver EC2 Instances | `Port 80 from Load Balancer SG` | `Port 80 to VPC Endpoint SG` <br> `Port 443 to VPC Endpoint SG` <br> `Port 80 to S3 Prefix List` <br> `Port 443 to S3 Prefix List` <br> `Port 3306 to RDS SG` <br> `Port 6379 to Redis SG` |
+| VPC Endpoints  | All non-S3 VPC Endpoints | `Port 80 from Webserver SG` <br> `Port 443 from Webserver SG` | `None` |
+| RDS            | RDS Cluster          | `Port 3306 from Webserver SG` | `None` |
+| Redis          | Elasticache Redis Cluster | `Port 6379 from Webserver SG` | `None` |
