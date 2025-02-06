@@ -43,7 +43,7 @@ resource "aws_s3_bucket_policy" "web_assets" {
         ]
         Condition = {
           StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.craft_europa.arn
+            "AWS:SourceArn" = aws_cloudfront_distribution.default.arn
           }
         }
       }

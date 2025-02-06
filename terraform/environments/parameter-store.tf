@@ -35,11 +35,11 @@ resource "aws_ssm_parameter" "env_s3_region" {
 resource "aws_ssm_parameter" "env_s3_base_url" {
   name  = "/example-application/${module.this.stage}/CRAFT_ASSET_BASE_URL"
   type  = "String"
-  value = "https://${aws_cloudfront_distribution.craft_europa.domain_name}"
+  value = "https://${aws_cloudfront_distribution.default.domain_name}"
 }
 
 resource "aws_ssm_parameter" "env_cloudfront_id" {
   name  = "/example-application/${module.this.stage}/CRAFT_CLOUDFRONT_ID"
   type  = "String"
-  value = aws_cloudfront_distribution.craft_europa.id
+  value = aws_cloudfront_distribution.default.id
 }

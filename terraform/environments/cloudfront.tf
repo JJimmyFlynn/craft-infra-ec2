@@ -5,7 +5,7 @@ resource "aws_cloudfront_origin_access_control" "web_s3" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "craft_europa" {
+resource "aws_cloudfront_distribution" "default" {
   comment = "Example Application - Front ALB"
   enabled = true
   aliases = [var.domain]
