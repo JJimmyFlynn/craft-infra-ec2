@@ -12,6 +12,8 @@ jobs:
   BuildArtifact:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
