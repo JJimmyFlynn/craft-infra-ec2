@@ -79,6 +79,28 @@ data "aws_iam_policy_document" "app_s3_access" {
   }
 }
 
+data "aws_iam_policy_document" "artifact_bucket_put" {
+  statement {
+    effect = "Allow"
+    actions = [
+    "s3:PutObject"
+    ]
+    resources = [
+      module.artifact_bucket.bucket_arn
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "allow_build_artifact_parameter_put" {
+  statement {
+    effect = "Allow"
+    actions = ["ssm:PutParameter"]
+    resources = [
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.parameter_store_path}/build_artifact_name"
+    ]
+  }
+}
+
 /*=========== Policy Definitions ===========*/
 resource "aws_iam_policy" "allow_get_ssm_env_params" {
   name   = "GetSSMEnvironmentParams"
@@ -90,9 +112,14 @@ resource "aws_iam_policy" "allow_web_files_s3_access" {
   policy = data.aws_iam_policy_document.app_s3_access.json
 }
 
-resource "aws_iam_policy" "github_actions" {
-  name = "GithubActionsExampleApplication"
-  policy = data.aws_iam_policy_document.app_s3_access.json
+resource "aws_iam_policy" "allow_artifact_bucket_put" {
+  name = "AllowExampleApplicationArtifactBucketPut"
+  policy = data.aws_iam_policy_document.artifact_bucket_put.json
+}
+
+resource "aws_iam_policy" "allow_build_artifact_parameter_put" {
+  name = "AllowExampleApplicationBuildArtifactPut"
+  policy = data.aws_iam_policy_document.allow_build_artifact_parameter_put.json
 }
 
 /*=========== Role Definitions ===========*/
@@ -125,7 +152,12 @@ resource "aws_iam_role_policy_attachment" "ec2_instance_role_allow_s3" {
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_s3_access" {
-  policy_arn = aws_iam_policy.github_actions.arn
+  policy_arn = aws_iam_policy.allow_artifact_bucket_put.arn
+  role       = aws_iam_role.github_actions_roles.name
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_parameter_store_access" {
+  policy_arn = aws_iam_policy.allow_build_artifact_parameter_put.arn
   role       = aws_iam_role.github_actions_roles.name
 }
 

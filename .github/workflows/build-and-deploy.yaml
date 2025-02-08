@@ -9,6 +9,9 @@ on:
 permissions:
   id-token: write
   contents: read
+defaults:
+  run:
+    working-directory: ./sample-application
 env:
   AWS_EXECUTION_ROLE: ${{secrets.AWS_EXECUTION_ROLE}}
 jobs:
@@ -30,3 +33,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Build Composer Deps
+        run: composer install
+      - name: Build NPM Deps
+        run: npm ci
+#       For simplicity the sample application has no css/js to be built
+#      - name: Build assets
+#        run: npm run prod
+      - name: Package application
+        run: tar --exclude='.env' --exclude -czf example-application-${{github.sha}} .
+      - name: Copy package to S3
+        run: aws s3 copy example-application-${{github.sha}} s3://fly-ue1-dev-example-application-artifact-786781442308818825
