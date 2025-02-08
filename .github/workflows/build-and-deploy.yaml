@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{env.AWS_EXECUTION_ROLE}}
           aws-region: us-east-1

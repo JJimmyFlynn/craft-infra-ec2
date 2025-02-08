@@ -33,8 +33,8 @@ data "aws_iam_policy_document" "github_actions_role_trust_policy" {
     }
 
     condition {
-      test     = "StringEquals"
-      values = ["repo:JJimmyFlynn/craft-infra-ec2"]
+      test     = "StringLike"
+      values = ["repo:JJimmyFlynn/craft-infra-ec2:*"]
       variable = "token.actions.githubusercontent.com:sub"
     }
   }
