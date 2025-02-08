@@ -13,10 +13,13 @@ env:
   AWS_EXECUTION_ROLE: ${{secrets.AWS_EXECUTION_ROLE}}
 jobs:
   BuildArtifact:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - run: |
+          ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://demo" | jq -r .value)
+          echo $ID_TOKEN | base64
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
