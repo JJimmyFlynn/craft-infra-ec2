@@ -6,6 +6,9 @@ on:
       - dev
     paths:
       - sample-application/**/*
+permissions:
+  id-token: write
+  contents: read
 env:
   AWS_EXECUTION_ROLE: ${{secrets.AWS_EXECUTION_ROLE}}
 jobs:
