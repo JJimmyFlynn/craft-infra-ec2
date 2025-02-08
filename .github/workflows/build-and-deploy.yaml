@@ -12,10 +12,9 @@ permissions:
 defaults:
   run:
     working-directory: ./sample-application
-env:
-  AWS_EXECUTION_ROLE_ARN: ${{environment.secrets.AWS_EXECUTION_ROLE_ARN}}
 jobs:
   BuildArtifact:
+    environment: ${{inputs.environment}}
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
@@ -23,7 +22,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{env.AWS_EXECUTION_ROLE_ARN}}
+          role-to-assume: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
           aws-region: us-east-1
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -43,4 +42,4 @@ jobs:
       - name: Package application
         run: tar --exclude='.env' --exclude -czf example-application-${{github.sha}} .
       - name: Copy package to S3
-        run: aws s3 copy example-application-${{github.sha}} ${{environment.ARTIFACT_S3_BUCKET}}
+        run: aws s3 copy example-application-${{github.sha}} ${{vars.ARTIFACT_S3_BUCKET}}
