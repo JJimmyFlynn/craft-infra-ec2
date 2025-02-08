@@ -1,7 +1,11 @@
-/****************************************
-* EC2 Instance Profile
-*****************************************/
 module "ec2_instance_role_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  context = module.this.context
+}
+
+module "github_actions_role" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
 
@@ -13,6 +17,29 @@ data "aws_iam_policy" "managed_ssm_policy" {
 }
 
 /*=========== Policy Document Definitions ===========*/
+data "aws_iam_policy_document" "github_actions_role_trust_policy" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      values = ["sts.amazon.com"]
+      variable = "token.actions.githubusercontent.com:aud"
+    }
+
+    condition {
+      test     = "StringEquals"
+      values = ["repo:JJimmyFlynn/craft-infra-ec2"]
+      variable = "token.actions.githubusercontent.com:sub"
+    }
+  }
+}
+
 data "aws_iam_policy_document" "ec2_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -63,12 +90,22 @@ resource "aws_iam_policy" "allow_web_files_s3_access" {
   policy = data.aws_iam_policy_document.app_s3_access.json
 }
 
+resource "aws_iam_policy" "github_actions" {
+  name = "GithubActionsExampleApplication"
+  policy = data.aws_iam_policy_document.app_s3_access.json
+}
+
 /*=========== Role Definitions ===========*/
 resource "aws_iam_role" "webserver_instance_role" {
   name               = "${module.ec2_instance_role_label.id}-instance-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role_policy.json
 
   tags = module.ec2_instance_role_label.tags
+}
+
+resource "aws_iam_role" "github_actions_roles" {
+  name = "${module.this.name}-github-actions"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_role_trust_policy.json
 }
 
 /*=========== Role Policy Attachment Definitions ===========*/
@@ -85,6 +122,11 @@ resource "aws_iam_role_policy_attachment" "ec2_instance_role_get_params" {
 resource "aws_iam_role_policy_attachment" "ec2_instance_role_allow_s3" {
   policy_arn = aws_iam_policy.allow_web_files_s3_access.arn
   role       = aws_iam_role.webserver_instance_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_s3_access" {
+  policy_arn = aws_iam_policy.github_actions.arn
+  role       = aws_iam_role.github_actions_roles.name
 }
 
 /*=========== Instance Profile Definitions ===========*/
