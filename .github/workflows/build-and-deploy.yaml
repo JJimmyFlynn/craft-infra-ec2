@@ -16,13 +16,15 @@ jobs:
   BuildArtifact:
     environment: ${{inputs.environment}}
     runs-on: ubuntu-22.04
+    env:
+      AWS_EXECUTION_ROLE_ARN: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
+          role-to-assume: ${{env.AWS_EXECUTION_ROLE_ARN}}
           aws-region: us-east-1
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
