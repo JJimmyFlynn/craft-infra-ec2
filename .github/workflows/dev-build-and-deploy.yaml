@@ -1,4 +1,4 @@
-name: Build Artifact and Deploy
+name: DEV - Build Artifact and Deploy
 on:
   workflow_dispatch:
   push:
@@ -11,9 +11,9 @@ permissions:
   contents: read
 jobs:
   DevBuildArtifact:
-    name: Dev Build
+    name: Dev Build Artifact
     secrets: inherit
-    uses: ./.github/workflows/actions/build.yaml
+    uses: ./.github/workflows/reusable-build.yaml
     with:
       ENVIRONMENT: dev
 #jobs:
