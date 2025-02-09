@@ -9,7 +9,7 @@ on:
     branches:
       - dev
     paths:
-      - sample-application/**/*
+      - example-application/**/*
 permissions:
   id-token: write
   contents: read
