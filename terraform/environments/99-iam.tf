@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "artifact_bucket_put" {
     "s3:PutObject"
     ]
     resources = [
-      module.artifact_bucket.bucket_arn
+      "${module.artifact_bucket.bucket_arn}/*"
     ]
   }
 }
