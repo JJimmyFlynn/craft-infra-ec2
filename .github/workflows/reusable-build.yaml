@@ -1,4 +1,4 @@
-name: Build Application Artifact
+name: ⚙️ Build Application Artifact
 on:
   workflow_call:
     inputs:

@@ -1,4 +1,4 @@
-name: DEV - Build Artifact and Deploy
+name: 🚀 DEV - Build Artifact and Deploy
 on:
   workflow_dispatch:
   push:
