@@ -1,11 +1,9 @@
-name: 🚀 DEV - Build Artifact and Deploy
+name: 🚀 PROD - Build Artifact and Deploy
 on:
   workflow_dispatch:
   push:
     branches:
-      - dev
-    paths:
-      - example-application/**/*
+      - prod
 permissions:
   id-token: write
   contents: read
@@ -15,11 +13,11 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/reusable-build.yaml
     with:
-      ENVIRONMENT: dev
+      ENVIRONMENT: prod
   Deploy:
     name: Deploy
     needs: BuildArtifact
     secrets: inherit
     uses: ./.github/workflows/reusable-instance-refresh.yaml
     with:
-      ENVIRONMENT: dev
+      ENVIRONMENT: prod

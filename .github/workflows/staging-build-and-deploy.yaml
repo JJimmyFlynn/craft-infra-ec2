@@ -1,9 +1,8 @@
-name: 🚀 DEV - Build Artifact and Deploy
+name: 🚀 STAGING - Build Artifact and Deploy
 on:
-  workflow_dispatch:
   push:
     branches:
-      - dev
+      - staging
     paths:
       - example-application/**/*
 permissions:
@@ -15,11 +14,11 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/reusable-build.yaml
     with:
-      ENVIRONMENT: dev
+      ENVIRONMENT: staging
   Deploy:
     name: Deploy
     needs: BuildArtifact
     secrets: inherit
     uses: ./.github/workflows/reusable-instance-refresh.yaml
     with:
-      ENVIRONMENT: dev
+      ENVIRONMENT: staging
