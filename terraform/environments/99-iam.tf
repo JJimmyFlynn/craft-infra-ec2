@@ -101,6 +101,14 @@ data "aws_iam_policy_document" "allow_build_artifact_parameter_put" {
   }
 }
 
+data "aws_iam_policy_document" "allow_instace_refresh" {
+  statement {
+    effect = "Allow"
+    actions = ["autoscaling:StartInstanceRefresh"]
+    resources = [aws_autoscaling_group.web.arn]
+  }
+}
+
 /*=========== Policy Definitions ===========*/
 resource "aws_iam_policy" "allow_get_ssm_env_params" {
   name   = "GetSSMEnvironmentParams"
@@ -120,6 +128,11 @@ resource "aws_iam_policy" "allow_artifact_bucket_put" {
 resource "aws_iam_policy" "allow_build_artifact_parameter_put" {
   name = "AllowExampleApplicationBuildArtifactPut"
   policy = data.aws_iam_policy_document.allow_build_artifact_parameter_put.json
+}
+
+resource "aws_iam_policy" "allow_instance_refresh" {
+  name = "AllowExampleApplicationInstanceRefresh"
+  policy = data.aws_iam_policy_document.allow_instace_refresh.json
 }
 
 /*=========== Role Definitions ===========*/
@@ -158,6 +171,11 @@ resource "aws_iam_role_policy_attachment" "github_actions_s3_access" {
 
 resource "aws_iam_role_policy_attachment" "github_actions_parameter_store_access" {
   policy_arn = aws_iam_policy.allow_build_artifact_parameter_put.arn
+  role       = aws_iam_role.github_actions_roles.name
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_instance_refresh" {
+  policy_arn = aws_iam_policy.allow_instance_refresh.arn
   role       = aws_iam_role.github_actions_roles.name
 }
 

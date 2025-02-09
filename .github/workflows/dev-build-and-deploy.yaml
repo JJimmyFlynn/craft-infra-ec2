@@ -16,39 +16,9 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     with:
       ENVIRONMENT: dev
-#jobs:
-#  BuildArtifact:
-#    environment: ${{inputs.environment}}
-#    runs-on: ubuntu-22.04
-#    env:
-#      AWS_EXECUTION_ROLE_ARN: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
-#      TAR_FILENAME: example-application-${{github.sha}}.tar.gz
-#    steps:
-#      - name: Checkout repo
-#        uses: actions/checkout@v4
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v4
-#        with:
-#          role-to-assume: ${{env.AWS_EXECUTION_ROLE_ARN}}
-#          aws-region: us-east-1
-#      - name: Setup PHP
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: '8.2'
-#      - name: Setup Node
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '22'
-#      - name: Build Composer Deps
-#        run: composer install --working-dir ./example-application
-#      - name: Build NPM Deps
-#        run: npm ci --prefix ./example-application
-##       For simplicity the sample application has no css/js to be built
-##      - name: Build assets
-##        run: npm run prod
-#      - name: Package application
-#        run: tar --exclude='.env' -czf $TAR_FILENAME example-application
-#      - name: Copy package to S3
-#        run: aws s3 cp $TAR_FILENAME ${{vars.ARTIFACT_S3_BUCKET}}
-#      - name: Update parameter store
-#        run: aws ssm put-parameter --name ${{vars.BUILD_ARTIFACT_PARAMETER}} --value $TAR_FILENAME --overwrite
+  DevDeploy:
+    name: Dev Deploy
+    secrets: inherit
+    uses: ./.github/workflows/reusable-instance-refresh.yaml
+    with:
+      ENVIRONMENT: dev

@@ -170,7 +170,7 @@ resource "aws_vpc_endpoint" "ssm_endpoint" {
   subnet_ids          = aws_subnet.private.*.id
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
-  tags                = module.s3_endpoint_label.tags
+  tags                = module.ssm_endpoint_label.tags
 }
 
 /****************************************

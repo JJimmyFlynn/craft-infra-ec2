@@ -1,0 +1,22 @@
+name: ⚙️ Start Autoscaling Instance Refresh
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+jobs:
+  InstanceRefresh:
+    environment: ${{inputs.environment}}
+    runs-on: ubuntu-22.04
+    env:
+      AWS_EXECUTION_ROLE_ARN: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
+      AUTOSCALING_GROUP_NAME: ${{ secrets.AUTOSCALING_GROUP_NAME }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{env.AWS_EXECUTION_ROLE_ARN}}
+          aws-region: us-east-1
+      - name: Start Instance Refresh
+        run: aws autoscaling start-instance-refresh --auto-scaling-group-name $AUTOSCALING_GROUP_NAME --preferences SkipMatching=false,MinHealthyPercentage=100,MaxHealthyPercentage=200,InstanceWarmup=120 --no-cli-pager
