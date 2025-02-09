@@ -44,7 +44,7 @@ jobs:
 #      - name: Build assets
 #        run: npm run prod
       - name: Package application
-        run: tar --exclude='.env' -czf "example-application-$TAR_FILENAME" example-application
+        run: tar --exclude='.env' -czf $TAR_FILENAME example-application
       - name: Copy package to S3
         run: aws s3 cp $TAR_FILENAME ${{vars.ARTIFACT_S3_BUCKET}}
       - name: Update parameter store
