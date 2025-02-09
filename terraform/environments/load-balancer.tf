@@ -37,21 +37,6 @@ resource "aws_alb_target_group" "default" {
   }
 }
 
-resource "aws_lb_listener" "web_traffic_http" {
-  load_balancer_arn = aws_alb.default.arn
-  port              = 80
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
-}
-
 resource "aws_lb_listener" "web_traffic_https" {
   load_balancer_arn = aws_alb.default.arn
   protocol          = "HTTPS"
