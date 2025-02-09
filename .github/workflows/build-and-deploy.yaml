@@ -46,6 +46,6 @@ jobs:
 #      - name: Build assets
 #        run: npm run prod
       - name: Package application
-        run: tar --exclude='.env' --exclude -czf example-application-${{github.sha}} .
+        run: tar --exclude='.env' -czf example-application-${{github.sha}} .
       - name: Copy package to S3
         run: aws s3 copy example-application-${{github.sha}} ${{vars.ARTIFACT_S3_BUCKET}}
