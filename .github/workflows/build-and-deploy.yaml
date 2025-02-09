@@ -1,6 +1,10 @@
 name: Build Artifact and Deploy
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
   push:
     branches:
       - dev
