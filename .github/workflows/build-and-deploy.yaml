@@ -48,4 +48,4 @@ jobs:
       - name: Copy package to S3
         run: aws s3 cp $TAR_FILENAME ${{vars.ARTIFACT_S3_BUCKET}}
       - name: Update parameter store
-        run: aws ssm put-parameter /example-application/dev/build_artifact --value $TAR_FILENAME
+        run: aws ssm put-parameter --name ${{vars.BUILD_ARTIFACT_PARAMETER}} --value $TAR_FILENAME
