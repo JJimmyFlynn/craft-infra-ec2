@@ -13,9 +13,6 @@ on:
 permissions:
   id-token: write
   contents: read
-defaults:
-  run:
-    working-directory: ./sample-application
 jobs:
   BuildArtifact:
     environment: ${{inputs.environment}}
@@ -39,13 +36,13 @@ jobs:
         with:
           node-version: '22'
       - name: Build Composer Deps
-        run: composer install
+        run: composer install --working-dir ./example-application
       - name: Build NPM Deps
-        run: npm ci
+        run: npm ci --prefix ./example-application
 #       For simplicity the sample application has no css/js to be built
 #      - name: Build assets
 #        run: npm run prod
       - name: Package application
-        run: tar --exclude='.env' -czf example-application-${{github.sha}} .
+        run: tar --exclude='.env' -czf example-application-${{github.sha}} example-application
       - name: Copy package to S3
         run: aws s3 copy example-application-${{github.sha}} ${{vars.ARTIFACT_S3_BUCKET}}
