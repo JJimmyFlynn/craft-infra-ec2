@@ -79,11 +79,11 @@ A clound init script fetches the latest application release artifact from an S3 
 | Redis          | Elasticache Redis Cluster | `Port 6379 from Webserver SG`                                 | `None`                                                                                                                                                                                     |
 
 ### CI/CD
-> [! Note]
+> [!Note]
 > In a real world scenario, the example application and related Github workflows would likely live in a separate git repo.
 > It is included here for completeness.
 
-CI/CD for the example application is performed using Github Actions.  
+CI/CD for the example application is performed using Github Actions. 
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
