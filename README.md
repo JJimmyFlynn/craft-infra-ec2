@@ -22,7 +22,7 @@ The VPC requires at least 2 AZs. The total number of AZs utilized can be set wit
 
 ### Load Balancer
 An ALB is configured to route traffic to the application EC2 instances target group. As explained in the CloudFront section, this application is frontend by CloudFront and
-the ALB only allows incoming connections from the CloudFront Service. The ALB listens on both HTTP and HTTPS but redirects all traffic to HTTPS.
+the ALB only allows incoming connections from the CloudFront Service. The ALB listens on HTTPS (Cloudfront is configured to redirect all HTTP traffic to HTTPS).
 #### Health Checks
 The ALB performs a health check by accessing the built-in Craft health check route at `/actions/app/health-check`
 
