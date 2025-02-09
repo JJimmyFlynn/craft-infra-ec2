@@ -18,6 +18,7 @@ jobs:
       ENVIRONMENT: dev
   DevDeploy:
     name: Dev Deploy
+    needs: DevBuildArtifact
     secrets: inherit
     uses: ./.github/workflows/reusable-instance-refresh.yaml
     with:
