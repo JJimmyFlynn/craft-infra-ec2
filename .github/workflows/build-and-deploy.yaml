@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       AWS_EXECUTION_ROLE_ARN: ${{secrets.AWS_EXECUTION_ROLE_ARN}}
+      TAR_FILENAME: example-application-${{github.sha}}.tar.gz
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -43,6 +44,8 @@ jobs:
 #      - name: Build assets
 #        run: npm run prod
       - name: Package application
-        run: tar --exclude='.env' -czf example-application-${{github.sha}} example-application
+        run: tar --exclude='.env' -czf "example-application-$TAR_FILENAME" example-application
       - name: Copy package to S3
-        run: aws s3 cp example-application-${{github.sha}} ${{vars.ARTIFACT_S3_BUCKET}}
+        run: aws s3 cp $TAR_FILENAME ${{vars.ARTIFACT_S3_BUCKET}}
+      - name: Update parameter store
+        run: aws ssm put-parameter /example-application/dev/build_artifact --value $TAR_FILENAME
