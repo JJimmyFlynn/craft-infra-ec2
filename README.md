@@ -2,10 +2,18 @@
 > This architecture is presented only as an example. Additional configuration may be required based on your needs and security requirements
 
 ## Architecture Overview
+
 ### Ansible & Packer
 Packer is used to generate an AMI which can be used by EC2 instances.
 The configuration of this AMI is done through Anisble. There are several roles that are used by the playbook to configure a basic PHP webserver. The roles configure Nginx and PHP-fpm as well as several security defaults.
 Ansible variables control the logic of the roles. An example of these settings can be found in `/ansible/php-webserver/vars.yaml`his
+
+### Terraform Variables
+Configuration of terraform for a given environment is done via terraform variables. Multiple different environment configurations
+can be configured by using separate `.tfvars` files such as `dev.tfvars` as Terraform workspaces to configure separate environments with separate state.
+In the real world, a more robust Terraform automation solution should be used.
+
+[Spacelift](https://spacelift.io) is an excellent choice,  as is [Env0](https://www.env0.com) 
 
 ### VPC
 > [!Note]
@@ -58,7 +66,7 @@ The heart of this infrastructure is EC2. The VMs are deployed with a Launch Temp
 All instances are deployed within private subnets and utilize VPC enpoints for communication with necessary AWS services.
 
 The instances are deployed in an auto-sacling group which uses a tracking policy to monitor the average CPU utilization and manage the number of instances. 
-A clound init sctipt fetches the latest application release artifact from an S3 bucket on instance creation and grabs the environment variables nesessary to run the application from SSM Parameter Store.
+A clound init script fetches the latest application release artifact from an S3 bucket on instance creation and grabs the environment variables necessary to run the application from SSM Parameter Store.
 
 ### Security Groups
 
@@ -69,6 +77,13 @@ A clound init sctipt fetches the latest application release artifact from an S3 
 | VPC Endpoints  | All non-S3 VPC Endpoints  | `Port 80 from Webserver SG` <br> `Port 443 from Webserver SG` | `None`                                                                                                                                                                                     |
 | RDS            | RDS Cluster               | `Port 3306 from Webserver SG`                                 | `None`                                                                                                                                                                                     |
 | Redis          | Elasticache Redis Cluster | `Port 6379 from Webserver SG`                                 | `None`                                                                                                                                                                                     |
+
+### CI/CD
+> [! Note]
+> In a real world scenario, the example application and related Github workflows would likely live in a separate git repo.
+> It is included here for completeness.
+
+CI/CD for the example application is performed using Github Actions.  
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
