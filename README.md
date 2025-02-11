@@ -86,7 +86,7 @@ A clound init script fetches the latest application release artifact from an S3 
 CI/CD for the example application is performed using Github Actions. The deployment to an environment is composed of two reusable actions:
 - Artifact Build (`reusable-build.yaml`)
   - This action builds the Composer and NPM dependencies for the application. It then packages the built application into a tarball and uploads it to an artifact S3 bucket. It also updates a SSM parameter store value with the name of the tarball for consumption for the EC2 init script
-- Instance Refresh (`reusable-instance-refresh.yaml`)
+- Instance Refresh (`reusable-instance-refresh.yaml1`)
   - This action initiates an [Instance Refresh](https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-refresh-overview.html) on the app's autoscaling group. In short, this is like a rolling deployment. It will spin up new instances up to a max-healthy percentage threshold, wait for those instance to become healthy, and then terminate older instances. This continues until all instances have been refreshed (i.e. replaced).
 
 ### Github Environments
